@@ -206,8 +206,10 @@ bool RenderConnection(const ImVec2& input_pos, const ImVec2& output_pos, float t
     ImVec2 p3 = output_pos + ImVec2{canvas->Style.CurveStrength * canvas->Zoom, 0};
 #if IMGUI_VERSION_NUM < 18000
     ImVec2 closest_pt = ImBezierClosestPointCasteljau(input_pos, p2, p3, output_pos, ImGui::GetMousePos(), style.CurveTessellationTol);
-#else
+#elif IMGUI_VERSION_NUM < 19292
     ImVec2 closest_pt = ImBezierCubicClosestPointCasteljau(input_pos, p2, p3, output_pos, ImGui::GetMousePos(), style.CurveTessellationTol);
+#else
+    ImVec2 closest_pt = ImBezierCubicClosestPointCasteljau(input_pos, p2, p3, output_pos, ImGui::GetMousePos(), style.CurveTessellationMaxError);
 #endif
     float min_square_distance = ImFabs(ImLengthSqr(ImGui::GetMousePos() - closest_pt));
     bool is_close = min_square_distance <= thickness * thickness;
